@@ -17,19 +17,18 @@ public class BouncingParticles extends PApplet {
 /* Documentation
  * Using vertex to create the walls
  * https://processing.org/reference/vertex_.html
+ * Click to build new objects
+ * https://processing.org/reference/mouseClicked_.html
  */
-
 
 PImage wall;
 PImage floor;
 PImage ceiling;
-int z = -1000; // determines how far the vertex is pushed back
-public void setup() {
-  
-  wall = loadImage(sketchPath("") + "images/27.png");
-  wall.resize(wall.width/5, wall.height/5);
+boolean clicked = false;
 
-}
+ArrayList<Ball> balls = new ArrayList<Ball>();
+
+int z = -1000; // depth of our game
 
 public void buildEnvironment() {
   // Build the back wall
@@ -76,31 +75,88 @@ public void buildEnvironment() {
   endShape();
 }
 
+// Trigger to determine when to add a ball
+public void mouseClicked()
+{
+  clicked = true;
+}
+
+public void setup() {
+  
+  wall = loadImage(sketchPath("") + "images/27.png");
+  wall.resize(wall.width/5, wall.height/5);
+}
+
 public void draw() {
   buildEnvironment();
 
-  Ball b = new Ball();
+  if(clicked)
+  {
+    balls.add(new Ball(mouseX, mouseY));
+    clicked = false;
+  }
+
+  for (int i = 0; i < balls.size(); i++) {
+    balls.get(i).displayBall();
+  }
 }
 
 /* Ball Class: contains properties of the ball
- *
+ * https://processing.org/reference/shape_.html
  *
  */
 
 class Ball {
-  int x;
-  int y;
-  int z;
+  // Dimensions x,y,z, radius, Velocity of X,Y,Z
+  float x,y,z,r, vx, vy, vz;
+  PShape ball;
+
+  Ball(float x, float y)
+  {
+    // Setting the values
+    setX(x);
+    setY(y);
+    setZ(1);
+    setRadius(random(30,40));
+
+    // Build Object
+    createBall();
+
+  }
 
   // Setters
-  public void setX(int x) { this.x = x; }
-  public void setY(int y) { this.y = y; }
-  public void setZ(int z) { this.z = z; }
+  public void setX(float x) { this.x = x; }
+  public void setY(float y) { this.y = y; }
+  public void setZ(float z) { this.z = z; }
+  public void setVelocityX(float x) { this.vx = x; }
+  public void setVelocityY(float y) { this.vy = y; }
+  public void setVelocityZ(float z) { this.vz = z; }
+  public void setRadius(float r) { this.r = r; }
+
 
   // Getters
-  public int getX() { return x; }
-  public int getY() { return y; }
-  public int getZ() { return z; }
+  public float getX() { return x; }
+  public float getY() { return y; }
+  public float getZ() { return z; }
+  public float getVelocityX() { return vx; }
+  public float getVelocityY() { return vy; }
+  public float getVelocityZ() { return vz; }
+  public float getRadius() { return r; }
+
+  // Creates Ball Object
+  public void createBall() {
+    ball = createShape(SPHERE, getRadius());
+  }
+
+  // Displays Ball Object
+  public void displayBall()
+  {
+    pushMatrix();
+    translate(getX(), getY(), getZ() * -1);
+    shape(ball);
+    popMatrix();
+  }
+
 }
   public void settings() {  size(800, 500, P3D); }
   static public void main(String[] passedArgs) {
