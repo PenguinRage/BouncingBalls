@@ -109,9 +109,10 @@ public void draw() {
  *
  */
 
-class Ball {
-  // Dimensions x,y,z, radius, Velocity of X,Y,Z, Friction of x, y, z
-  float x,y,z,r, vx, vy, vz, g;
+class Ball
+{
+  // Dimensions x,y,z, radius, Velocity of X,Y,Z, Friction of x, y, z, Spin, direction
+  float x,y,z,r, vx, vy, vz, g, s, d;
 
   PShape ball;
 
@@ -126,16 +127,18 @@ class Ball {
     setGravity(0.98f);
 
     // Set Velocity of the Object
-    setVelocityX(random(-20,20));
-    setVelocityY(random(-20,20));
+    setVelocityX(random(-20,30));
+    setVelocityY(random(-20,30));
     setVelocityZ(random(20));
 
     // Set Radius of the Object
     setRadius(random(30,40));
+    // Set spin & it's direction for the Object
+    setSpin(random(50,80));
+    setDirection(1);
 
     // Build Object
     createBall();
-
   }
 
   // Setters
@@ -147,6 +150,8 @@ class Ball {
   public void setVelocityY(float y) { this.vy = y; }
   public void setVelocityZ(float z) { this.vz = z; }
   public void setRadius(float r) { this.r = r; }
+  public void setSpin(float s) { this.s = s; }
+  public void setDirection(float d) { this.d = d; }
 
 
   // Getters
@@ -157,20 +162,25 @@ class Ball {
   public float getVelocityY() { return vy; }
   public float getVelocityZ() { return vz; }
   public float getRadius() { return r; }
+  public float getSpin() { return s; }
+  public float getDirection() { return d; }
 
   // Creates Ball Object
-  public void createBall() {
+  public void createBall()
+  {
     ball = createShape(SPHERE, getRadius());
   }
 
   // Displays Ball Object
   public void displayBall()
   {
+    updateBall();
     pushMatrix();
     translate(getX(), getY(), getZ() * -1);
+    rotateX(PI * getDirection() * frameCount * Math.abs(getVelocityZ() / getSpin()));
     shape(ball);
     popMatrix();
-    updateBall();
+
   }
 
   // Updates Ball Object's destination
@@ -214,6 +224,11 @@ class Ball {
     {
       setZ(Math.abs(depth));
       setVelocityZ(vz * fz);
+
+      if (getVelocityZ() < 0 && getDirection() > 0)
+      {
+        setDirection(getDirection() * -1.01f);
+      }
     }
 
     /* Screen window
@@ -225,6 +240,32 @@ class Ball {
     */
 
   }
+
+  public void collision()
+  {
+    for (int i = 0; i < balls.size(); i++)
+    {
+      Ball b = balls.get(i);
+      // Not this ball
+      if (b.equals(this)) continue;
+      // minimal distance between the balls
+      float dif_min = b.getRadius() + this.getRadius();
+      float dif_x = getX() - b.getX();
+      float dif_y = getY() - b.getY();
+      float dif_z = getZ() - b.getZ();
+
+      float xy = sqrt(dif_x * dif_x + dif_y * dif_y);
+      float xz = sqrt(dif_x * dif_x + dif_z * dif_z);
+      float yz = sqrt(dif_y * dif_y + dif_z * dif_z);
+
+      if (xy <= dif_min && xz <= dif_min && yz <= dif_min)
+      {
+        // Collision part
+      }
+    }
+  }
+
+
 }
   public void settings() {  size(800, 500, P3D); }
   static public void main(String[] passedArgs) {
