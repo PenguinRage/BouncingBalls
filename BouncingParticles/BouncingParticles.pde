@@ -12,40 +12,43 @@ boolean clicked = false;
 
 ArrayList<Ball> balls = new ArrayList<Ball>();
 
-int z = -1000; // depth of our game
+int depth = -1000; // depth of our game
+float fx = -0.1;
+float fy = -0.9;
+float fz = -0.6;
 
 void buildEnvironment() {
   // Build the back wall
   beginShape();
   texture(wall);
-  vertex(0, 0, z, 0, 0);
-  vertex(width, 0, z, width, 0);
-  vertex(width, height, z, width, height);
-  vertex(0, height, z, 0, height);
+  vertex(0, 0, depth, 0, 0);
+  vertex(width, 0, depth, width, 0);
+  vertex(width, height, depth, width, height);
+  vertex(0, height, depth, 0, height);
   endShape();
 
   // Build the left wall
   beginShape();
   texture(wall);
   vertex(0, 0, 0, 0, 0);
-  vertex(0, 0, z, width, 0);
-  vertex(0, height, z, width, height);
+  vertex(0, 0, depth, width, 0);
+  vertex(0, height, depth, width, height);
   vertex(0, height, 0, 0, height);
   endShape();
 
   // Build the floor
   beginShape();
   vertex(0, height, 0, 0, 0);
-  vertex(0, height, z, 0, 0);
-  vertex(width, height, z, width, height);
+  vertex(0, height, depth, 0, 0);
+  vertex(width, height, depth, width, height);
   vertex(width, height, 0, width, 0);
   endShape();
 
   // Build the ceiling
   beginShape();
   vertex(0, 0, 0, 0, 0);
-  vertex(0, 0, z, 0, height);
-  vertex(width, 0, z, width, height);
+  vertex(0, 0, depth, 0, height);
+  vertex(width, 0, depth, width, height);
   vertex(width, 0, 0, width, 0);
   endShape();
 
@@ -53,8 +56,8 @@ void buildEnvironment() {
   beginShape();
   texture(wall);
   vertex(width, 0, 0, 0, 0);
-  vertex(width, 0, z, width, 0);
-  vertex(width, height, z, width, height);
+  vertex(width, 0, depth, width, 0);
+  vertex(width, height, depth, width, height);
   vertex(width, height, 0, 0, height);
   endShape();
 }

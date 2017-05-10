@@ -28,40 +28,43 @@ boolean clicked = false;
 
 ArrayList<Ball> balls = new ArrayList<Ball>();
 
-int z = -1000; // depth of our game
+int depth = -1000; // depth of our game
+float fx = -0.1f;
+float fy = -0.9f;
+float fz = -0.6f;
 
 public void buildEnvironment() {
   // Build the back wall
   beginShape();
   texture(wall);
-  vertex(0, 0, z, 0, 0);
-  vertex(width, 0, z, width, 0);
-  vertex(width, height, z, width, height);
-  vertex(0, height, z, 0, height);
+  vertex(0, 0, depth, 0, 0);
+  vertex(width, 0, depth, width, 0);
+  vertex(width, height, depth, width, height);
+  vertex(0, height, depth, 0, height);
   endShape();
 
   // Build the left wall
   beginShape();
   texture(wall);
   vertex(0, 0, 0, 0, 0);
-  vertex(0, 0, z, width, 0);
-  vertex(0, height, z, width, height);
+  vertex(0, 0, depth, width, 0);
+  vertex(0, height, depth, width, height);
   vertex(0, height, 0, 0, height);
   endShape();
 
   // Build the floor
   beginShape();
   vertex(0, height, 0, 0, 0);
-  vertex(0, height, z, 0, 0);
-  vertex(width, height, z, width, height);
+  vertex(0, height, depth, 0, 0);
+  vertex(width, height, depth, width, height);
   vertex(width, height, 0, width, 0);
   endShape();
 
   // Build the ceiling
   beginShape();
   vertex(0, 0, 0, 0, 0);
-  vertex(0, 0, z, 0, height);
-  vertex(width, 0, z, width, height);
+  vertex(0, 0, depth, 0, height);
+  vertex(width, 0, depth, width, height);
   vertex(width, 0, 0, width, 0);
   endShape();
 
@@ -69,8 +72,8 @@ public void buildEnvironment() {
   beginShape();
   texture(wall);
   vertex(width, 0, 0, 0, 0);
-  vertex(width, 0, z, width, 0);
-  vertex(width, height, z, width, height);
+  vertex(width, 0, depth, width, 0);
+  vertex(width, height, depth, width, height);
   vertex(width, height, 0, 0, height);
   endShape();
 }
@@ -107,16 +110,27 @@ public void draw() {
  */
 
 class Ball {
-  // Dimensions x,y,z, radius, Velocity of X,Y,Z
-  float x,y,z,r, vx, vy, vz;
+  // Dimensions x,y,z, radius, Velocity of X,Y,Z, Friction of x, y, z
+  float x,y,z,r, vx, vy, vz, g;
+
   PShape ball;
 
   Ball(float x, float y)
   {
-    // Setting the values
+    // Set Dimensions
     setX(x);
     setY(y);
     setZ(1);
+
+    // set Gravity
+    setGravity(0.98f);
+
+    // Set Velocity of the Object
+    setVelocityX(random(-20,20));
+    setVelocityY(random(-20,20));
+    setVelocityZ(random(20));
+
+    // Set Radius of the Object
     setRadius(random(30,40));
 
     // Build Object
@@ -125,6 +139,7 @@ class Ball {
   }
 
   // Setters
+  public void setGravity(float g) { this.g = g; }
   public void setX(float x) { this.x = x; }
   public void setY(float y) { this.y = y; }
   public void setZ(float z) { this.z = z; }
@@ -155,8 +170,61 @@ class Ball {
     translate(getX(), getY(), getZ() * -1);
     shape(ball);
     popMatrix();
+    updateBall();
   }
 
+  // Updates Ball Object's destination
+  public void updateBall()
+  {
+
+    setVelocityY(vy + g);
+    setX(x +vx);
+    setY(y + vy);
+    setZ(z + vz);
+
+    // Rebounding Conditions
+    // Left Wall
+    if (getX() < getRadius())
+    {
+      setX(getRadius());
+      setVelocityX(vx * fx);
+    }
+    // Right Wall
+    else if (getX() > width - getRadius())
+    {
+      setX(width - getRadius());
+      setVelocityX(vx * fx);
+    }
+
+    // Ceiling
+    if (getY() < getRadius())
+    {
+      setY(getRadius());
+      setVelocityY(vy * fy);
+    }
+    // Floor
+    else if (getY() > height - getRadius())
+    {
+      setY(height - getRadius());
+      setVelocityY(vy * fy);
+    }
+
+    // Back Wall
+    if (getZ() > Math.abs(depth))
+    {
+      setZ(Math.abs(depth));
+      setVelocityZ(vz * fz);
+    }
+
+    /* Screen window
+    else if (getZ() < 0)
+    {
+      setZ(0);
+      setVelocityZ(vz * fz);
+    }
+    */
+
+  }
 }
   public void settings() {  size(800, 500, P3D); }
   static public void main(String[] passedArgs) {
