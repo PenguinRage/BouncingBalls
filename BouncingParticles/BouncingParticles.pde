@@ -8,6 +8,9 @@
 PImage wall;
 PImage floor;
 PImage ceiling;
+PImage texture;
+int id = 0;
+
 boolean clicked = false;
 
 ArrayList<Ball> balls = new ArrayList<Ball>();
@@ -38,6 +41,7 @@ void buildEnvironment() {
 
   // Build the floor
   beginShape();
+  texture(floor);
   vertex(0, height, 0, 0, 0);
   vertex(0, height, depth, 0, 0);
   vertex(width, height, depth, width, height);
@@ -46,6 +50,7 @@ void buildEnvironment() {
 
   // Build the ceiling
   beginShape();
+  texture(ceiling);
   vertex(0, 0, 0, 0, 0);
   vertex(0, 0, depth, 0, height);
   vertex(width, 0, depth, width, height);
@@ -71,7 +76,10 @@ void mouseClicked()
 void setup() {
   size(800, 500, P3D);
   wall = loadImage(sketchPath("") + "images/27.png");
-  wall.resize(wall.width/5, wall.height/5);
+  wall.resize(wall.width/3, wall.height/3);
+  floor = loadImage(sketchPath("") + "images/54.jpg");
+  floor.resize(floor.width*2, floor.height*2);
+  ceiling = floor;
 }
 
 void draw() {
@@ -85,5 +93,13 @@ void draw() {
 
   for (int i = 0; i < balls.size(); i++) {
     balls.get(i).displayBall();
+  }
+
+  for (int i = balls.size()-1; i >= 0; i--)
+  {
+    if (balls.get(i).remove)
+    {
+      balls.remove(i);
+    }
   }
 }

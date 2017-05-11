@@ -8,6 +8,7 @@ class Ball
 {
   // Dimensions x,y,z, radius, Velocity of X,Y,Z, Friction of x, y, z, Spin, direction
   float x,y,z,r, vx, vy, vz, g, s, d;
+  Boolean remove;
 
   PShape ball;
 
@@ -17,9 +18,9 @@ class Ball
     setX(x);
     setY(y);
     setZ(1);
-
     // set Gravity
     setGravity(0.98);
+    remove = false;
 
     // Set Velocity of the Object
     setVelocityX(random(-20,30));
@@ -63,7 +64,11 @@ class Ball
   // Creates Ball Object
   void createBall()
   {
+    noStroke();
+    texture = loadImage(sketchPath("") + "images/"+ (int)random(0,26) + ".jpg");
     ball = createShape(SPHERE, getRadius());
+    ball.setTexture(texture);
+
   }
 
   // Displays Ball Object
@@ -126,39 +131,10 @@ class Ball
       }
     }
 
-    /* Screen window
-    else if (getZ() < 0)
+    if (getZ() < -300)
     {
-      setZ(0);
-      setVelocityZ(vz * fz);
+      remove = true;
     }
-    */
 
   }
-
-  void collision()
-  {
-    for (int i = 0; i < balls.size(); i++)
-    {
-      Ball b = balls.get(i);
-      // Not this ball
-      if (b.equals(this)) continue;
-      // minimal distance between the balls
-      float dif_min = b.getRadius() + this.getRadius();
-      float dif_x = getX() - b.getX();
-      float dif_y = getY() - b.getY();
-      float dif_z = getZ() - b.getZ();
-
-      float xy = sqrt(dif_x * dif_x + dif_y * dif_y);
-      float xz = sqrt(dif_x * dif_x + dif_z * dif_z);
-      float yz = sqrt(dif_y * dif_y + dif_z * dif_z);
-
-      if (xy <= dif_min && xz <= dif_min && yz <= dif_min)
-      {
-        // Collision part
-      }
-    }
-  }
-
-
 }

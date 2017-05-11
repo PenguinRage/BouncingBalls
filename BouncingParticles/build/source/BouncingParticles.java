@@ -24,6 +24,9 @@ public class BouncingParticles extends PApplet {
 PImage wall;
 PImage floor;
 PImage ceiling;
+PImage texture;
+int id = 0;
+
 boolean clicked = false;
 
 ArrayList<Ball> balls = new ArrayList<Ball>();
@@ -54,6 +57,7 @@ public void buildEnvironment() {
 
   // Build the floor
   beginShape();
+  texture(floor);
   vertex(0, height, 0, 0, 0);
   vertex(0, height, depth, 0, 0);
   vertex(width, height, depth, width, height);
@@ -62,6 +66,7 @@ public void buildEnvironment() {
 
   // Build the ceiling
   beginShape();
+  texture(ceiling);
   vertex(0, 0, 0, 0, 0);
   vertex(0, 0, depth, 0, height);
   vertex(width, 0, depth, width, height);
@@ -87,7 +92,10 @@ public void mouseClicked()
 public void setup() {
   
   wall = loadImage(sketchPath("") + "images/27.png");
-  wall.resize(wall.width/5, wall.height/5);
+  wall.resize(wall.width/3, wall.height/3);
+  floor = loadImage(sketchPath("") + "images/54.jpg");
+  floor.resize(floor.width*2, floor.height*2);
+  ceiling = floor;
 }
 
 public void draw() {
@@ -102,6 +110,14 @@ public void draw() {
   for (int i = 0; i < balls.size(); i++) {
     balls.get(i).displayBall();
   }
+
+  for (int i = balls.size()-1; i >= 0; i--)
+  {
+    if (balls.get(i).remove)
+    {
+      balls.remove(i);
+    }
+  }
 }
 
 /* Ball Class: contains properties of the ball
@@ -113,6 +129,7 @@ class Ball
 {
   // Dimensions x,y,z, radius, Velocity of X,Y,Z, Friction of x, y, z, Spin, direction
   float x,y,z,r, vx, vy, vz, g, s, d;
+  Boolean remove;
 
   PShape ball;
 
@@ -122,9 +139,9 @@ class Ball
     setX(x);
     setY(y);
     setZ(1);
-
     // set Gravity
     setGravity(0.98f);
+    remove = false;
 
     // Set Velocity of the Object
     setVelocityX(random(-20,30));
@@ -168,7 +185,11 @@ class Ball
   // Creates Ball Object
   public void createBall()
   {
+    noStroke();
+    texture = loadImage(sketchPath("") + "images/"+ (int)random(0,26) + ".jpg");
     ball = createShape(SPHERE, getRadius());
+    ball.setTexture(texture);
+
   }
 
   // Displays Ball Object
@@ -231,41 +252,12 @@ class Ball
       }
     }
 
-    /* Screen window
-    else if (getZ() < 0)
+    if (getZ() < -300)
     {
-      setZ(0);
-      setVelocityZ(vz * fz);
+      remove = true;
     }
-    */
 
   }
-
-  public void collision()
-  {
-    for (int i = 0; i < balls.size(); i++)
-    {
-      Ball b = balls.get(i);
-      // Not this ball
-      if (b.equals(this)) continue;
-      // minimal distance between the balls
-      float dif_min = b.getRadius() + this.getRadius();
-      float dif_x = getX() - b.getX();
-      float dif_y = getY() - b.getY();
-      float dif_z = getZ() - b.getZ();
-
-      float xy = sqrt(dif_x * dif_x + dif_y * dif_y);
-      float xz = sqrt(dif_x * dif_x + dif_z * dif_z);
-      float yz = sqrt(dif_y * dif_y + dif_z * dif_z);
-
-      if (xy <= dif_min && xz <= dif_min && yz <= dif_min)
-      {
-        // Collision part
-      }
-    }
-  }
-
-
 }
   public void settings() {  size(800, 500, P3D); }
   static public void main(String[] passedArgs) {
