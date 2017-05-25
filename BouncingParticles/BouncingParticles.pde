@@ -21,6 +21,7 @@ float fy = -0.9;
 float fz = -0.6;
 
 void buildEnvironment() {
+  noStroke();
   // Build the back wall
   beginShape();
   texture(wall);

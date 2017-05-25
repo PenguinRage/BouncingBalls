@@ -37,6 +37,7 @@ float fy = -0.9f;
 float fz = -0.6f;
 
 public void buildEnvironment() {
+  noStroke();
   // Build the back wall
   beginShape();
   texture(wall);
@@ -140,12 +141,12 @@ class Ball
     setY(y);
     setZ(1);
     // set Gravity
-    setGravity(0.98f);
+    setGravity(0.75f);
     remove = false;
 
     // Set Velocity of the Object
-    setVelocityX(random(-20,30));
-    setVelocityY(random(-20,30));
+    setVelocityX(random(-30,30));
+    setVelocityY(random(-40,40));
     setVelocityZ(random(20));
 
     // Set Radius of the Object
@@ -186,7 +187,7 @@ class Ball
   public void createBall()
   {
     noStroke();
-    texture = loadImage(sketchPath("") + "images/"+ (int)random(0,26) + ".jpg");
+    texture = loadImage(sketchPath("") + "images/"+ (int)random(0,15) + ".jpg");
     ball = createShape(SPHERE, getRadius());
     ball.setTexture(texture);
 

@@ -19,12 +19,12 @@ class Ball
     setY(y);
     setZ(1);
     // set Gravity
-    setGravity(0.98);
+    setGravity(0.75);
     remove = false;
 
     // Set Velocity of the Object
-    setVelocityX(random(-20,30));
-    setVelocityY(random(-20,30));
+    setVelocityX(random(-30,30));
+    setVelocityY(random(-40,40));
     setVelocityZ(random(20));
 
     // Set Radius of the Object
@@ -65,7 +65,7 @@ class Ball
   void createBall()
   {
     noStroke();
-    texture = loadImage(sketchPath("") + "images/"+ (int)random(0,26) + ".jpg");
+    texture = loadImage(sketchPath("") + "images/"+ (int)random(0,15) + ".jpg");
     ball = createShape(SPHERE, getRadius());
     ball.setTexture(texture);
 
