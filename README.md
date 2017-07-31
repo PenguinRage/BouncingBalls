@@ -6,6 +6,6 @@ Following requirement is:
 * Processing 3
 
 ### Preview
-![image1](BouncingBalls/BouncingParticles/images/balls.png)
+![image1](https://github.com/PenguinRage/BouncingBalls/BouncingParticles/images/balls.png)
 
-![image1](BouncingBalls/BouncingParticles/images/balls2.png)
+![image1](https://github.com/PenguinRage/BouncingBalls/BouncingParticles/images/balls2.png)
